@@ -88,6 +88,7 @@ public class PlayerController : MonoBehaviour
 
     private void AttackEnemy(EnemyController enemy)
     {
-        enemy.TakeDamage(1); // 1 ダメージを与える
+        enemy.TakeDamage(1);
+        GameManager.instance.UpdateEnemyHPBar(enemy.health, enemy.maxHealth); // HPバーを更新
     }
 }

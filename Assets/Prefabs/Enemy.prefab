@@ -99,3 +99,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveTime: 0.1
   health: 3
+  maxHealth: 3
+  healthBarPrefab: {fileID: 3513157566277641436, guid: 4c53066ec7bbfd0438736cd33f652af5, type: 3}

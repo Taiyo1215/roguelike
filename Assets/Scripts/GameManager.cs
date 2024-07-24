@@ -1,24 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance = null;  // シングルトンパターン
+    public static GameManager instance = null;
     private BoardManager boardManager;
-    private List<EnemyController> enemies = new();
+    private List<EnemyController> enemies = new List<EnemyController>();
     public bool playersTurn;
-    private bool enemiesMoving = false;//敵が移動中かどうか
+    private bool enemiesMoving = false;
+
+    public GameObject enemyHPPanel;  // HPパネルの参照
+    public Image enemyHPBar;         // HPバーの参照
 
     void Awake()
     {
-        // シングルトンパターンの実装
         if (instance == null)
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
 
-        DontDestroyOnLoad(gameObject); // シーン間でオブジェクトを破棄しないようにする
+        DontDestroyOnLoad(gameObject);
 
         boardManager = GetComponent<BoardManager>();
         InitGame();
@@ -26,32 +29,27 @@ public class GameManager : MonoBehaviour
 
     void InitGame()
     {
-        // ゲーム初期化
         boardManager.SetupScene();
     }
 
     void Update()
     {
-        // プレイヤーのターン中または敵が移動中なら更新処理を行わない
         if (playersTurn || enemiesMoving)
             return;
 
-        StartCoroutine(MoveEnemies()); //敵を移動させる
+        StartCoroutine(MoveEnemies());
     }
 
-    // 敵をリストに追加する
     public void AddEnemyToList(EnemyController script)
     {
         enemies.Add(script);
     }
 
-    // 敵をリストから削除する
     public void RemoveEnemyFromList(EnemyController script)
     {
         enemies.Remove(script);
     }
 
-    // 敵のリストを取得する
     public List<EnemyController> GetEnemies()
     {
         return enemies;
@@ -66,7 +64,6 @@ public class GameManager : MonoBehaviour
     {
         enemiesMoving = true;
 
-        // 敵を順番に動かす
         foreach (EnemyController enemy in enemies)
         {
             enemy.MoveEnemy();
@@ -75,5 +72,18 @@ public class GameManager : MonoBehaviour
 
         playersTurn = true;
         enemiesMoving = false;
+    }
+
+    // 敵のHPバーを更新する
+    public void UpdateEnemyHPBar(int currentHP, int maxHP)
+    {
+        enemyHPPanel.SetActive(true);
+        enemyHPBar.fillAmount = (float)currentHP / maxHP;
+    }
+
+    // 敵のHPバーを非表示にする
+    public void HideEnemyHPBar()
+    {
+        enemyHPPanel.SetActive(false);
     }
 }

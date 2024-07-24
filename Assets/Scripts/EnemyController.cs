@@ -8,6 +8,7 @@ public class EnemyController : MonoBehaviour
     private BoardManager boardManager;
     private bool isMoving = false;
 
+    public int maxHealth = 2;
     public int health = 2;
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
@@ -73,7 +74,7 @@ public class EnemyController : MonoBehaviour
     private IEnumerator FlashRed()
     {
         spriteRenderer.color = Color.red;
-        yield return new WaitForSeconds(0.1f); 
+        yield return new WaitForSeconds(0.1f);
         spriteRenderer.color = originalColor; // 元の色に戻す
     }
 
@@ -82,6 +83,7 @@ public class EnemyController : MonoBehaviour
     {
         boardManager.RemoveEnemyPosition(transform.position); // 位置リストから削除
         GameManager.instance.RemoveEnemyFromList(this); // 敵リストから削除
+        GameManager.instance.HideEnemyHPBar(); // HPバーを非表示
         Destroy(gameObject);
     }
 }
